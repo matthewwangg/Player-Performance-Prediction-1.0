@@ -5,20 +5,30 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
+import os
 
 app = Flask(__name__, static_url_path="/static")
 
 @app.route('/')
 def index():
 
-    predicts()
-    return render_template('index.html')
+    top_players = predicts()
+    return render_template('index.html', top_players=top_players)
 
 #@app.route('/predicts', methods=['GET','POST'])
 def predicts():
-    
+
+    # Get the current directory of the Flask application
+    current_dir = os.path.dirname(__file__)
+
+    # Navigate to the parent directory
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
+    # Define the path to the CSV file
+    csv_file_path = os.path.join(parent_dir, 'datasets', 'players.csv')
+
     # Reading in the CSV file from Kaggle (Credits to Paola Mazza) into a Pandas Data Frame
-    players_df = pd.read_csv("players.csv")
+    players_df = pd.read_csv(csv_file_path)
 
     positions = ["DEF", "MID", "FWD", "GKP"]
 
@@ -31,6 +41,12 @@ def predicts():
     for i in range(len(models)):
         evaluate_model(models[i], dataframes[i].select_dtypes(include=['int']).drop(columns=['total_points']), dataframes[i]['total_points'], positions[i])
 
+    top_players = []
+
+    for i in range(len(models)):
+        top_players.extend(get_top_players(models[i], dataframes[i], positions[i]))
+
+    return top_players
 
 # Preprocess the data within the Pandas Data Frame
 def preprocess(players_df, positions):
@@ -59,6 +75,26 @@ def train_models(dataframes, positions):
         trained_models.append(xgb_model)
 
     return trained_models
+
+# Get the top players
+def get_top_players(model, dataframe, position, n=5):
+    # Get the predictions
+    X = dataframe.select_dtypes(include=['int']).drop(columns=['total_points'])
+    predictions = model.predict(X)
+
+    # Get the player names
+    player_names = dataframe['name']
+
+    # Create a DataFrame with player names and their predicted points
+    player_points_df = pd.DataFrame({'name': player_names, 'predicted_points': predictions})
+
+    # Sort the DataFrame by predicted points in descending order
+    sorted_df = player_points_df.sort_values(by='predicted_points', ascending=False)
+
+    # Get the top n players
+    top_players = sorted_df.head(n)
+
+    return top_players.values.tolist()
 
 # Function to train XGBoost model with the predefined hyperparameters
 def train_xgboost_model(X, y, position):

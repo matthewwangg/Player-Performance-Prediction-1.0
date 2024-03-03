@@ -37,13 +37,21 @@
     <div class="photo-container">
         <img src="photo14.jpg" alt="Photo 14">
         <div class="description">
-            <p>Goalkeeper 1</p>
+            <p>{% if top_players %}
+                {{ top_players[15][0] }}
+                {% else %}
+                Goalkeeper 1
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo15.jpg" alt="Photo 15">
         <div class="description">
-            <p>Goalkeeper 2</p>
+            <p>{% if top_players %}
+                {{ top_players[16][0] }}
+                {% else %}
+                Goalkeeper 2
+                {% endif %}</p>
         </div>
     </div>
 </div>
@@ -53,31 +61,51 @@
         <!-- First group of 5 photos -->
         <img src="photo1.jpg" alt="Photo 1">
         <div class="description">
-            <p>Defender 1</p>
+            <p>{% if top_players %}
+                {{ top_players[0][0] }}
+                {% else %}
+                Defender 1
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo2.jpg" alt="Photo 2">
         <div class="description">
-            <p>Defender 2</p>
+            <p>{% if top_players %}
+                {{ top_players[1][0] }}
+                {% else %}
+                Defender 2
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo3.jpg" alt="Photo 3">
         <div class="description">
-            <p>Defender 3</p>
+            <p>{% if top_players %}
+                {{ top_players[2][0] }}
+                {% else %}
+                Defender 3
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo4.jpg" alt="Photo 4">
         <div class="description">
-            <p>Defender 4</p>
+            <p>{% if top_players %}
+                {{ top_players[3][0] }}
+                {% else %}
+                Defender 4
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo5.jpg" alt="Photo 5">
         <div class="description">
-            <p>Defender 5</p>
+            <p>{% if top_players %}
+                {{ top_players[4][0] }}
+                {% else %}
+                Defender 5
+                {% endif %}</p>
         </div>
     </div>
 </div>
@@ -86,31 +114,51 @@
     <div class="photo-container">
         <img src="photo6.jpg" alt="Photo 6">
         <div class="description">
-            <p>Midfielder 1</p>
+            <p>{% if top_players %}
+                {{ top_players[5][0] }}
+                {% else %}
+                Midfielder 1
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo7.jpg" alt="Photo 7">
         <div class="description">
-            <p>Midfielder 2</p>
+            <p>{% if top_players %}
+                {{ top_players[6][0] }}
+                {% else %}
+                Midfielder 2
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo8.jpg" alt="Photo 8">
         <div class="description">
-            <p>Midfielder 3</p>
+            <p>{% if top_players %}
+                {{ top_players[7][0] }}
+                {% else %}
+                Midfielder 3
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo9.jpg" alt="Photo 9">
         <div class="description">
-            <p>Midfielder 4</p>
+            <p>{% if top_players %}
+                {{ top_players[8][0] }}
+                {% else %}
+                Midfielder 4
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo10.jpg" alt="Photo 10">
         <div class="description">
-            <p>Midfielder 5</p>
+            <p>{% if top_players %}
+                {{ top_players[9][0] }}
+                {% else %}
+                Midfielder 5
+                {% endif %}</p>
         </div>
     </div>
 </div>
@@ -120,19 +168,31 @@
         <!-- Third group of 3 photos -->
         <img src="photo11.jpg" alt="Photo 11">
         <div class="description">
-            <p>Forward 1</p>
+            <p>{% if top_players %}
+                {{ top_players[10][0] }}
+                {% else %}
+                Forward 1
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo12.jpg" alt="Photo 12">
         <div class="description">
-            <p>Forward 2</p>
+            <p>{% if top_players %}
+                {{ top_players[11][0] }}
+                {% else %}
+                Forward 2
+                {% endif %}</p>
         </div>
     </div>
     <div class="photo-container">
         <img src="photo13.jpg" alt="Photo 13">
         <div class="description">
-            <p>Forward 3</p>
+            <p>{% if top_players %}
+                {{ top_players[12][0] }}
+                {% else %}
+                Forward 3
+                {% endif %}</p>
         </div>
     </div>
 </div>

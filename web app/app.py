@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
 import os
+import requests
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -31,6 +32,7 @@ def predicts():
     players_df = pd.read_csv(csv_file_path)
 
     positions = ["DEF", "MID", "FWD", "GKP"]
+    count = [5, 5, 3, 2]
 
     # Preprocess and separate the dataframe
     dataframes = preprocess(players_df, positions)
@@ -44,7 +46,7 @@ def predicts():
     top_players = []
 
     for i in range(len(models)):
-        top_players.extend(get_top_players(models[i], dataframes[i], positions[i]))
+        top_players.extend(get_top_players(models[i], dataframes[i], positions[i], count[i]))
 
     return top_players
 
@@ -77,7 +79,7 @@ def train_models(dataframes, positions):
     return trained_models
 
 # Get the top players
-def get_top_players(model, dataframe, position, n=5):
+def get_top_players(model, dataframe, position, n):
     # Get the predictions
     X = dataframe.select_dtypes(include=['int']).drop(columns=['total_points'])
     predictions = model.predict(X)
@@ -95,6 +97,48 @@ def get_top_players(model, dataframe, position, n=5):
     top_players = sorted_df.head(n)
 
     return top_players.values.tolist()
+
+# Function to get the manifest for the player images
+def get_manifest_json():
+    sport = "soccer"
+    access_level = "t"
+    version = "3"
+    provider = "reuters"
+    league = "epl"
+    image_type = "headshots"
+    year = "2024"
+    format = "json"
+    your_api_key = "muy5mttxmvb4zx6q995w4zcf"
+    manifest_search_url = f"https://api.sportradar.us/{sport}-images-{access_level}{version}/{provider}/{league}/{image_type}/players/{year}/manifest.{format}?api_key={your_api_key}"
+
+    try:
+        # Make a request to the image search API
+        response = requests.get(manifest_search_url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        image_results = response.json()
+
+        # Extract image URLs from the API response
+        image_urls = [result["url"] for result in image_results["results"]]
+        print(image_urls)
+        return image_urls
+
+    except requests.RequestException as e:
+        print(f"Error fetching image URLs: {e}")
+        return []
+
+# Function to get the image urls given the player names
+def get_image_urls(top_players):
+    image_urls = []
+    sport = "soccer"
+    access_level = ""
+    version = "3"
+    provider = "reuters"
+    league = "epl"
+    image_type = "headshots"
+    year = "2024"
+    format = "json"
+    your_api_key = "3wtfjw2jfy2wwuwbudr6b9ru"
+    imagesearchurl = "https://api.sportradar.us/{sport}-images-{access_level}{version}/{provider}/{league}/{image_type}/players/{asset_id}/{file_name}.{format}?api_key={your_api_key}"
 
 # Function to train XGBoost model with the predefined hyperparameters
 def train_xgboost_model(X, y, position):

@@ -7,6 +7,11 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
 import os
 import requests
+import matplotlib.pyplot as plt
+from io import StringIO, BytesIO
+import base64
+from xgboost import plot_importance
+
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -19,17 +24,8 @@ def index():
 #@app.route('/predicts', methods=['GET','POST'])
 def predicts():
 
-    # Get the current directory of the Flask application
-    current_dir = os.path.dirname(__file__)
-
-    # Navigate to the parent directory
-    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
-
-    # Define the path to the CSV file
-    csv_file_path = os.path.join(parent_dir, 'datasets', 'players.csv')
-
     # Reading in the CSV file from Kaggle (Credits to Paola Mazza) into a Pandas Data Frame
-    players_df = pd.read_csv(csv_file_path)
+    players_df = pd.read_csv(find_path())
 
     positions = ["DEF", "MID", "FWD", "GKP"]
     count = [5, 5, 3, 2]
@@ -43,12 +39,25 @@ def predicts():
     for i in range(len(models)):
         evaluate_model(models[i], dataframes[i].select_dtypes(include=['int']).drop(columns=['total_points']), dataframes[i]['total_points'], positions[i])
 
+    visualize(models, "visualizations", positions)
+
     top_players = []
 
     for i in range(len(models)):
         top_players.extend(get_top_players(models[i], dataframes[i], positions[i], count[i]))
 
     return top_players
+
+def find_path():
+    # Get the current directory of the Flask application
+    current_dir = os.path.dirname(__file__)
+
+    # Navigate to the parent directory
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+
+    # Define the path to the CSV file
+    csv_file_path = os.path.join(parent_dir, 'datasets', 'players.csv')
+    return csv_file_path
 
 # Preprocess the data within the Pandas Data Frame
 def preprocess(players_df, positions):
@@ -149,7 +158,9 @@ def train_xgboost_model(X, y, position):
         'max_depth': 3,
         'subsample': 0.8,
         'colsample_bytree': 0.8,
-        'n_estimators': 100
+        'n_estimators': 100,
+        'alpha': 0.1,
+        'lambda': 0.1
     }
 
     # Create XGBoost regressor with predefined hyperparameters
@@ -171,6 +182,31 @@ def evaluate_model(model, X_test, y_test, position):
     # Calculate MSE
     mse = mean_squared_error(y_test, y_pred)
     print(f"Mean Squared Error for {position}: {mse}")
+
+
+def visualize(models, output_dir, positions):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    visualizations = []
+
+    for idx, model in enumerate(models):
+        # Generate the feature importance plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        plot_importance(model, ax=ax)
+
+        # Save the plot as an image file
+        image_path = os.path.join(output_dir, f"visualization_{positions[idx]}.png")
+        fig.savefig(image_path, format='png')
+
+        # Close the figure to release memory
+        plt.close(fig)
+
+        # Append the image path to the list of visualizations
+        visualizations.append(image_path)
+
+    return visualizations
+
 
 # Function to perform hyperparameter tuning with cross-validation
 def tune_hyperparameters(X, y):

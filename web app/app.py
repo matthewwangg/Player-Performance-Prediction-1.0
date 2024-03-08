@@ -207,6 +207,51 @@ def visualize(models, output_dir, positions):
 
     return visualizations
 
+# Function to set the parameters for the linear optimization
+def linear_optimization():
+
+    # Set the maximum budget and position constraints
+    max_budget = 1000
+    max_keepers = 2
+    max_defenders = 5
+    max_midfielders = 5
+    max_forwards = 3
+
+    # Call the optimize_team function
+    selected_team = optimize_team(players_df, max_budget, max_keepers, max_defenders, max_midfielders, max_forwards)
+
+    # Display the selected team
+    print("Selected Team:")
+    print(selected_team)
+
+# Function that uses PuLP to optimize team
+def optimize_team(players_df, max_cost, max_keepers, max_defenders, max_midfielders, max_forwards):
+    # Create a linear programming problem
+    prob = LpProblem("TeamOptimization", LpMaximize)
+
+    # Create binary decision variables for each player
+    players_df['selected'] = LpVariable.dicts("Player", players_df.index, cat="Binary")
+
+    # Objective function: Maximize total points
+    prob += lpSum(players_df['total_points'] * players_df['selected'])
+
+    # Cost constraint: Total cost should be less than max_cost
+    prob += lpSum(players_df['now_cost'] * players_df['selected']) <= max_cost
+
+    # Position constraints: Limit the number of players from each role
+    prob += lpSum(players_df['selected'][players_df['position'] == 'GKP']) <= max_keepers
+    prob += lpSum(players_df['selected'][players_df['position'] == 'DEF']) <= max_defenders
+    prob += lpSum(players_df['selected'][players_df['position'] == 'MID']) <= max_midfielders
+    prob += lpSum(players_df['selected'][players_df['position'] == 'FWD']) <= max_forwards
+
+    # Solve the problem
+    prob.solve()
+
+    # Extract the selected players
+    selected_players = players_df.loc[players_df['selected'].apply(lambda x: x.varValue) == 1]
+
+    return selected_players
+
 
 # Function to perform hyperparameter tuning with cross-validation
 def tune_hyperparameters(X, y):

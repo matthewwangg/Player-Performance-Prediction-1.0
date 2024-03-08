@@ -254,3 +254,15 @@ nav a {
     margin-bottom: 20px;
 }
 
+.larger-header-div {
+    text-align: center;
+    padding: 40px;
+    background-color: #000000;
+}
+
+.larger-header {
+    font-size: 40px;
+    font-weight: bold;
+    color: #ffffff;
+}
+

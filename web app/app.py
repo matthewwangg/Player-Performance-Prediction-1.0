@@ -46,6 +46,9 @@ def predicts():
     for i in range(len(models)):
         top_players.extend(get_top_players(models[i], dataframes[i], positions[i], count[i]))
 
+    for i in range(len(models)):
+        print(get_predicted_points_for_position(models[i], dataframes[i]).head())
+
     return top_players
 
 def find_path():
@@ -106,6 +109,43 @@ def get_top_players(model, dataframe, position, n):
     top_players = sorted_df.head(n)
 
     return top_players.values.tolist()
+
+# Function to get predicted points for players in each position
+def get_predicted_points_for_position(model, dataframe):
+    # Assuming 'dataframe' is the input dataframe containing player information
+    X = dataframe.select_dtypes(include=['int']).drop(columns=['total_points'])
+    predictions = model.predict(X)
+
+    # Get the player names
+    player_names = dataframe['name']
+
+    # Create a DataFrame with player names and their predicted points
+    player_points_df = pd.DataFrame({'name': player_names, 'predicted_points': predictions})
+
+    return player_points_df
+
+# Function to create a DataFrame with predicted points and costs for all players
+def create_predicted_points_and_costs_dataframe(models, positions):
+    # Create an empty list to store DataFrames for each position
+    dfs = []
+
+    # Iterate through each position and corresponding model
+    for i in range(len(models)):
+        # Get predicted points for players in this position
+        # Here, you need the input dataframe containing player information
+        predicted_points_df = get_predicted_points_for_position(models[i], players_df[players_df['position'] == positions[i]])
+
+        # Append the DataFrame to the list
+        dfs.append(predicted_points_df)
+
+    # Concatenate DataFrames for each position
+    predicted_points_and_costs_df = pd.concat(dfs, ignore_index=True)
+
+    # Assuming 'players_df' is the input dataframe containing player information
+    # Merge player costs from the original dataframe
+    predicted_points_and_costs_df['cost'] = players_df['now_cost']
+
+    return predicted_points_and_costs_df
 
 # Function to get the manifest for the player images
 def get_manifest_json():

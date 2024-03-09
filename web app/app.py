@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from io import StringIO, BytesIO
 import base64
 from xgboost import plot_importance
-
+from pulp import LpProblem, LpVariable, lpSum, LpMaximize, LpMinimize
 
 app = Flask(__name__, static_url_path="/static")
 
@@ -46,8 +46,9 @@ def predicts():
     for i in range(len(models)):
         top_players.extend(get_top_players(models[i], dataframes[i], positions[i], count[i]))
 
-    for i in range(len(models)):
-        print(get_predicted_points_for_position(models[i], dataframes[i]).head())
+    predicted_points_df = create_predicted_points_and_costs_dataframe(models, positions, players_df)
+
+    linear_optimization(predicted_points_df)
 
     return top_players
 
@@ -116,16 +117,17 @@ def get_predicted_points_for_position(model, dataframe):
     X = dataframe.select_dtypes(include=['int']).drop(columns=['total_points'])
     predictions = model.predict(X)
 
-    # Get the player names
+    # Get the player names and positions
     player_names = dataframe['name']
+    positions = dataframe['position']
 
-    # Create a DataFrame with player names and their predicted points
-    player_points_df = pd.DataFrame({'name': player_names, 'predicted_points': predictions})
+    # Create a DataFrame with player names, positions, and their predicted points
+    player_points_df = pd.DataFrame({'name': player_names, 'position': positions, 'predicted_points': predictions})
 
     return player_points_df
 
 # Function to create a DataFrame with predicted points and costs for all players
-def create_predicted_points_and_costs_dataframe(models, positions):
+def create_predicted_points_and_costs_dataframe(models, positions, players_df):
     # Create an empty list to store DataFrames for each position
     dfs = []
 
@@ -248,7 +250,7 @@ def visualize(models, output_dir, positions):
     return visualizations
 
 # Function to set the parameters for the linear optimization
-def linear_optimization():
+def linear_optimization(df):
 
     # Set the maximum budget and position constraints
     max_budget = 1000
@@ -258,40 +260,39 @@ def linear_optimization():
     max_forwards = 3
 
     # Call the optimize_team function
-    selected_team = optimize_team(players_df, max_budget, max_keepers, max_defenders, max_midfielders, max_forwards)
+    selected_team = optimize_team(df, max_budget, max_keepers, max_defenders, max_midfielders, max_forwards)
 
     # Display the selected team
     print("Selected Team:")
     print(selected_team)
 
 # Function that uses PuLP to optimize team
-def optimize_team(players_df, max_cost, max_keepers, max_defenders, max_midfielders, max_forwards):
+def optimize_team(df, max_cost, max_keepers, max_defenders, max_midfielders, max_forwards):
     # Create a linear programming problem
     prob = LpProblem("TeamOptimization", LpMaximize)
 
     # Create binary decision variables for each player
-    players_df['selected'] = LpVariable.dicts("Player", players_df.index, cat="Binary")
+    df['selected'] = LpVariable.dicts("Player", df.index, cat="Binary")
 
     # Objective function: Maximize total points
-    prob += lpSum(players_df['total_points'] * players_df['selected'])
+    prob += lpSum(df['predicted_points'] * df['selected'])
 
     # Cost constraint: Total cost should be less than max_cost
-    prob += lpSum(players_df['now_cost'] * players_df['selected']) <= max_cost
+    prob += lpSum(df['cost'] * df['selected']) <= max_cost
 
     # Position constraints: Limit the number of players from each role
-    prob += lpSum(players_df['selected'][players_df['position'] == 'GKP']) <= max_keepers
-    prob += lpSum(players_df['selected'][players_df['position'] == 'DEF']) <= max_defenders
-    prob += lpSum(players_df['selected'][players_df['position'] == 'MID']) <= max_midfielders
-    prob += lpSum(players_df['selected'][players_df['position'] == 'FWD']) <= max_forwards
+    prob += lpSum(df['selected'][df['position'] == 'GKP']) <= max_keepers
+    prob += lpSum(df['selected'][df['position'] == 'DEF']) <= max_defenders
+    prob += lpSum(df['selected'][df['position'] == 'MID']) <= max_midfielders
+    prob += lpSum(df['selected'][df['position'] == 'FWD']) <= max_forwards
 
     # Solve the problem
     prob.solve()
 
     # Extract the selected players
-    selected_players = players_df.loc[players_df['selected'].apply(lambda x: x.varValue) == 1]
+    selected_players = df.loc[df['selected'].apply(lambda x: x.varValue) == 1]
 
     return selected_players
-
 
 # Function to perform hyperparameter tuning with cross-validation
 def tune_hyperparameters(X, y):

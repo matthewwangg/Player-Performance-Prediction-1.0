@@ -266,3 +266,26 @@ nav a {
     color: #ffffff;
 }
 
+.view-players-button {
+    background-color: #800080;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 28px;
+    margin-top: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-players-button:hover {
+    background-color: #6a006a; /* Darker shade of purple on hover */
+}
+
+/* SETUP for future Javascript Functionality: Hide player containers and visualization containers initially */
+/*.container, .visualization-container {
+    display: none;
+}*/

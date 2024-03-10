@@ -30,6 +30,9 @@
     <div class="header-container1">
         <h1 class="header-text">Premier League Player Performance Predictions</h1>
         <p class="description">Here are the best performing players in the English Premier League according to my machine learning model.</p>
+        <form action="{{ url_for('predict') }}" method="post">
+            <button id="make-predictions-btn" class="view-players-button">Make Predictions</button>
+        </form>
     </div>
 </div>
 <div class="larger-header-div">
@@ -197,6 +200,170 @@
     </div>
 </div>
 <div class="larger-header-div">
+    <h1 class="larger-header">Predicted Best Starting Lineup For Budget</h1>
+</div>
+<div class="container">
+    <div class="photo-container">
+        <img src="photo14.jpg" alt="Photo 14">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[13].name }}
+                {% else %}
+                Goalkeeper 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo15.jpg" alt="Photo 15">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[14].name }}
+                {% else %}
+                Goalkeeper 2
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="photo-container">
+        <img src="photo1.jpg" alt="Photo 1">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[0].name }}
+                {% else %}
+                Defender 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo2.jpg" alt="Photo 2">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[1].name }}
+                {% else %}
+                Defender 2
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo3.jpg" alt="Photo 3">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[2].name }}
+                {% else %}
+                Defender 3
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo4.jpg" alt="Photo 4">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[3].name }}
+                {% else %}
+                Defender 4
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo5.jpg" alt="Photo 5">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[4].name }}
+                {% else %}
+                Defender 5
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="photo-container">
+        <img src="photo6.jpg" alt="Photo 6">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[5].name }}
+                {% else %}
+                Midfielder 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo7.jpg" alt="Photo 7">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[6].name }}
+                {% else %}
+                Midfielder 2
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo8.jpg" alt="Photo 8">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[7].name }}
+                {% else %}
+                Midfielder 3
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo9.jpg" alt="Photo 9">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[8].name }}
+                {% else %}
+                Midfielder 4
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo10.jpg" alt="Photo 10">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[9].name }}
+                {% else %}
+                Midfielder 5
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="photo-container">
+        <img src="photo11.jpg" alt="Photo 11">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[10].name }}
+                {% else %}
+                Forward 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo12.jpg" alt="Photo 12">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[11].name }}
+                {% else %}
+                Forward 2
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo13.jpg" alt="Photo 13">
+        <div class="description">
+            <p>{% if optimized_players %}
+                {{ optimized_players[12].name }}
+                {% else %}
+                Forward 3
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+<div class="larger-header-div">
     <h1 class="larger-header">Visualizations of the Top Features used by XGBoost</h1>
 </div>
 <div class="visualization-container">
@@ -205,6 +372,28 @@
     <img class="visualization-img" src="{{ url_for('static', filename='visualization_MID.png') }}" alt="MID Predictions">
     <img class="visualization-img" src="{{ url_for('static', filename='visualization_FWD.png') }}" alt="FWD Predictions">
 </div>
+
+<script>
+    document.getElementById('make-predictions-btn').addEventListener('click', function() {
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('player-container').style.display = 'block';
+                document.getElementById('visualization-container').style.display = 'block';
+
+                // Process and display 'data.top_players' and 'data.optimized_players' as needed
+            })
+            .catch(error => {
+                console.error('Error during prediction:', error);
+            });
+    });
+</script>
+
 
 </body>
 </html>

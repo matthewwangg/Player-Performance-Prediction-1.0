@@ -7,6 +7,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
 import os
 import requests
+import matplotlib
+matplotlib.use('Agg')  # This needs to be done before importing pyplot or pylab
 import matplotlib.pyplot as plt
 from io import StringIO, BytesIO
 import base64
@@ -18,8 +20,20 @@ app = Flask(__name__, static_url_path="/static")
 @app.route('/')
 def index():
 
-    top_players = predicts()
-    return render_template('index.html', top_players=top_players)
+    return render_template('index.html')
+    #top_players, optimized_players = predicts()
+    #return render_template('index.html', top_players=top_players, optimized_players=optimized_players)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Call your predict function here and store the results
+    top_players, optimized_players = predicts()
+
+    return render_template('index.html', top_players=top_players, optimized_players=optimized_players)
+
+    # SETUP for future Javascript Functionality: Return a response that can be handled by the frontend
+    # return jsonify({'top_players': top_players, 'optimized_players': optimized_players})
+
 
 #@app.route('/predicts', methods=['GET','POST'])
 def predicts():
@@ -48,9 +62,15 @@ def predicts():
 
     predicted_points_df = create_predicted_points_and_costs_dataframe(models, positions, players_df)
 
-    linear_optimization(predicted_points_df)
+    optimized_players = linear_optimization(predicted_points_df)
 
-    return top_players
+    # Convert optimized players to list of dicts for easier template rendering
+    optimized_players_list = optimized_players.to_dict(orient='records')
+
+    print(optimized_players_list)
+
+    return top_players, optimized_players_list
+
 
 def find_path():
     # Get the current directory of the Flask application
@@ -133,9 +153,14 @@ def create_predicted_points_and_costs_dataframe(models, positions, players_df):
 
     # Iterate through each position and corresponding model
     for i in range(len(models)):
+        # Filter players_df for current position
+        position_df = players_df[players_df['position'] == positions[i]]
+
         # Get predicted points for players in this position
-        # Here, you need the input dataframe containing player information
-        predicted_points_df = get_predicted_points_for_position(models[i], players_df[players_df['position'] == positions[i]])
+        predicted_points_df = get_predicted_points_for_position(models[i], position_df)
+
+        # Merge costs into predicted_points_df based on player names (or IDs if available)
+        predicted_points_df = predicted_points_df.merge(position_df[['name', 'now_cost']], on='name', how='left')
 
         # Append the DataFrame to the list
         dfs.append(predicted_points_df)
@@ -143,11 +168,8 @@ def create_predicted_points_and_costs_dataframe(models, positions, players_df):
     # Concatenate DataFrames for each position
     predicted_points_and_costs_df = pd.concat(dfs, ignore_index=True)
 
-    # Assuming 'players_df' is the input dataframe containing player information
-    # Merge player costs from the original dataframe
-    predicted_points_and_costs_df['cost'] = players_df['now_cost']
-
     return predicted_points_and_costs_df
+
 
 # Function to get the manifest for the player images
 def get_manifest_json():
@@ -265,6 +287,7 @@ def linear_optimization(df):
     # Display the selected team
     print("Selected Team:")
     print(selected_team)
+    return selected_team
 
 # Function that uses PuLP to optimize team
 def optimize_team(df, max_cost, max_keepers, max_defenders, max_midfielders, max_forwards):
@@ -278,7 +301,7 @@ def optimize_team(df, max_cost, max_keepers, max_defenders, max_midfielders, max
     prob += lpSum(df['predicted_points'] * df['selected'])
 
     # Cost constraint: Total cost should be less than max_cost
-    prob += lpSum(df['cost'] * df['selected']) <= max_cost
+    prob += lpSum(df['now_cost'] * df['selected']) <= max_cost
 
     # Position constraints: Limit the number of players from each role
     prob += lpSum(df['selected'][df['position'] == 'GKP']) <= max_keepers

@@ -15,8 +15,12 @@ import base64
 from xgboost import plot_importance
 from pulp import LpProblem, LpVariable, lpSum, LpMaximize, LpMinimize
 from data_processing import predicts
+import database
 
 app = Flask(__name__, static_url_path="/static")
+
+# Initialize the database with the Flask app
+database.init_app(app)
 
 @app.route('/')
 def index():

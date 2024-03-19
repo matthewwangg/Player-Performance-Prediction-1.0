@@ -20,7 +20,8 @@ import database
 app = Flask(__name__, static_url_path="/static")
 
 # Initialize the database with the Flask app
-database.init_app(app)
+# Commented for now
+#database.init_app(app)
 
 @app.route('/')
 def index():

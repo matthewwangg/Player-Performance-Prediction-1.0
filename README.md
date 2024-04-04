@@ -6,6 +6,9 @@ https://www.kaggle.com/datasets/meraxes10/fantasy-premier-league-dataset-2023-20
 # Datasets 2
 English Premier League 2022-2023 Season Stats Datasets credits to MUSTAFA GÜRKAN ÇANAKÇI (MIT)
 https://www.kaggle.com/datasets/mechatronixs/english-premier-league-22-23-season-stats/data
+# Datasets 3
+Premier League Matches 1993-2023 (CC0: Public Domain)
+https://www.kaggle.com/datasets/evangower/premier-league-matches-19922022
 # Libraries/Frameworks/Tech Stack used
 - SciKit-Learn
 - PyTorch

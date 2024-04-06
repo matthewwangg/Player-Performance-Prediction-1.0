@@ -24,4 +24,5 @@ https://www.kaggle.com/datasets/evangower/premier-league-matches-19922022
 - Random Forest Regressor
 - Dense Neural Networks
 - Extreme Gradient Boosting (XGBoost)
+- Long Short-Term Memory
 

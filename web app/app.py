@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from data_processing import predicts
+from data_processing import predicts, predicts_custom
 from data_pipeline import initialize_map
 
 
@@ -26,6 +26,15 @@ def predict():
 
     # SETUP for future Javascript Functionality: Return a response that can be handled by the frontend
     # return jsonify({'top_players': top_players, 'optimized_players': optimized_players})
+
+@app.route('/predict_custom', methods=['POST'])
+def predict_custom():
+    data = request.json  # Access JSON data from the request
+
+    optimized_players = predicts_custom(data)
+
+    # Render a template and pass the optimized players as a variable
+    return render_template('optimized_players.html', optimized_players=optimized_players)
 
 if __name__ == '__main__':
     app.run(debug=True)

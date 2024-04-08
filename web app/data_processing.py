@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from model_training import train_models, evaluate_model, visualize
-from optimizations import linear_optimization
+from optimizations import linear_optimization, linear_optimization_specific
 
 
 # @app.route('/predicts', methods=['GET','POST'])
@@ -39,6 +39,45 @@ def predicts():
     print(optimized_players_list)
 
     return top_players, optimized_players_list
+
+def predicts_custom(data):
+
+    # Parse the data here to gather counts for each type, players to exclude/include from the team, and custom budget
+
+    # Reading in the CSV file from Kaggle (Credits to Paola Mazza) into a Pandas Data Frame
+    players_df = pd.read_csv(find_path())
+
+    positions = ["DEF", "MID", "FWD", "GKP"]
+    count = [5, 5, 3, 2]
+
+    # Preprocess and separate the dataframe
+    dataframes = preprocess(players_df, positions)
+
+    # Make predictions using your function from the module
+    models = train_models(dataframes, positions)
+
+    for i in range(len(models)):
+        evaluate_model(models[i], dataframes[i].select_dtypes(include=['int']).drop(columns=['total_points']),
+                       dataframes[i]['total_points'], positions[i])
+
+    visualize(models, "visualizations", positions)
+
+    top_players = []
+
+    for i in range(len(models)):
+        top_players.extend(get_top_players(models[i], dataframes[i], positions[i], count[i]))
+
+    predicted_points_df = create_predicted_points_and_costs_dataframe(models, positions, players_df)
+
+    optimized_players = linear_optimization_specific(predicted_points_df, 1000, count[3], count[0], count[1], count[2], [])
+
+    # Convert optimized players to list of dicts for easier template rendering
+    optimized_players_list = optimized_players.to_dict(orient='records')
+
+    print(optimized_players_list)
+
+    return top_players, optimized_players_list
+
 
 
 def find_path():

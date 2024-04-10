@@ -372,7 +372,34 @@
     <img class="visualization-img" src="{{ url_for('static', filename='visualization_MID.png') }}" alt="MID Predictions">
     <img class="visualization-img" src="{{ url_for('static', filename='visualization_FWD.png') }}" alt="FWD Predictions">
 </div>
-
+<div class="larger-header-div">
+    <h1 class="larger-header">Customize Your Team</h1>
+</div>
+<div class="container-customize">
+    <form class="team-customization-form" id="team-customization-form">
+        <div class="form-group">
+            <label for="goalkeepers">Number of Goalkeepers:</label>
+            <input type="number" id="goalkeepers" name="goalkeepers" min="1" value="1">
+        </div>
+        <div class="form-group">
+            <label for="defenders">Number of Defenders:</label>
+            <input type="number" id="defenders" name="defenders" min="1" value="4">
+        </div>
+        <div class="form-group">
+            <label for="midfielders">Number of Midfielders:</label>
+            <input type="number" id="midfielders" name="midfielders" min="1" value="4">
+        </div>
+        <div class="form-group">
+            <label for="forwards">Number of Forwards:</label>
+            <input type="number" id="forwards" name="forwards" min="1" value="2">
+        </div>
+        <div class="form-group">
+            <label for="budget">Budget:</label>
+            <input type="number" id="budget" name="budget" min="0" value="100">
+        </div>
+        <button type="submit">Update Team</button>
+    </form>
+</div>
 <script>
     document.getElementById('make-predictions-btn').addEventListener('click', function() {
         fetch('/predict', {

@@ -285,6 +285,71 @@ nav a {
     background-color: #6a006a; /* Darker shade of purple on hover */
 }
 
+.team-customization-container {
+    text-align: center;
+    padding: 40px;
+    padding-bottom: 0px;
+    background-color: #000000;
+}
+
+.team-customization-header {
+    font-size: 40px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.team-customization-form {
+    max-width: 600px;
+    margin: 0 auto
+}
+
+.team-customization-form .form-group {
+    margin-bottom: 20px;
+}
+
+.team-customization-form label {
+    display: block;
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.team-customization-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.team-customization-form button {
+    background-color: #800080;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.team-customization-form button:hover {
+    background-color: #6a006a; /* Darker shade of purple on hover */
+}
+
+.container-customize {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 0px;
+    background-color: black;
+    padding: 40px;
+    padding-top: 0px;
+}
+
 /* SETUP for future Javascript Functionality: Hide player containers and visualization containers initially */
 /*.container, .visualization-container {
     display: none;

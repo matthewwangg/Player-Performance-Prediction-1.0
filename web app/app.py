@@ -19,22 +19,19 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Call your predict function here and store the results
+
     top_players, optimized_players = predicts()
 
     return render_template('index.html', top_players=top_players, optimized_players=optimized_players)
 
-    # SETUP for future Javascript Functionality: Return a response that can be handled by the frontend
-    # return jsonify({'top_players': top_players, 'optimized_players': optimized_players})
-
 @app.route('/predict_custom', methods=['POST'])
 def predict_custom():
-    data = request.json  # Access JSON data from the request
+
+    data = request.json
 
     optimized_players = predicts_custom(data)
 
-    # Render a template and pass the optimized players as a variable
-    return render_template('optimized_players.html', optimized_players=optimized_players)
+    return render_template('index.html', optimized_players_custom=optimized_players)
 
 if __name__ == '__main__':
     app.run(debug=True)

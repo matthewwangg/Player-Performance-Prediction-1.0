@@ -379,26 +379,190 @@
     <form class="team-customization-form" id="team-customization-form">
         <div class="form-group">
             <label for="goalkeepers">Number of Goalkeepers:</label>
-            <input type="number" id="goalkeepers" name="goalkeepers" min="1" value="1">
+            <input type="number" id="goalkeepers" name="goalkeepers" min="1" value="2">
         </div>
         <div class="form-group">
             <label for="defenders">Number of Defenders:</label>
-            <input type="number" id="defenders" name="defenders" min="1" value="4">
+            <input type="number" id="defenders" name="defenders" min="1" value="5">
         </div>
         <div class="form-group">
             <label for="midfielders">Number of Midfielders:</label>
-            <input type="number" id="midfielders" name="midfielders" min="1" value="4">
+            <input type="number" id="midfielders" name="midfielders" min="1" value="5">
         </div>
         <div class="form-group">
             <label for="forwards">Number of Forwards:</label>
-            <input type="number" id="forwards" name="forwards" min="1" value="2">
+            <input type="number" id="forwards" name="forwards" min="1" value="3">
         </div>
         <div class="form-group">
             <label for="budget">Budget:</label>
-            <input type="number" id="budget" name="budget" min="0" value="100">
+            <input type="number" id="budget" name="budget" min="0" value="1000">
         </div>
         <button type="submit">Update Team</button>
     </form>
+</div>
+<div class="larger-header-div">
+    <h1 class="larger-header">Custom Team</h1>
+</div>
+<div class="container">
+    <div class="photo-container">
+        <img src="photo14.jpg" alt="Photo 14">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[13][0] }}
+                {% else %}
+                Goalkeeper 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo15.jpg" alt="Photo 15">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[14][0] }}
+                {% else %}
+                Goalkeeper 2
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="photo-container">
+        <img src="photo1.jpg" alt="Photo 1">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[0][0] }}
+                {% else %}
+                Defender 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo2.jpg" alt="Photo 2">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[1][0] }}
+                {% else %}
+                Defender 2
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo3.jpg" alt="Photo 3">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[2][0] }}
+                {% else %}
+                Defender 3
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo4.jpg" alt="Photo 4">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[3][0] }}
+                {% else %}
+                Defender 4
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo5.jpg" alt="Photo 5">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[4][0] }}
+                {% else %}
+                Defender 5
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="photo-container">
+        <img src="photo6.jpg" alt="Photo 6">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[5][0] }}
+                {% else %}
+                Midfielder 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo7.jpg" alt="Photo 7">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[6][0] }}
+                {% else %}
+                Midfielder 2
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo8.jpg" alt="Photo 8">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[7][0] }}
+                {% else %}
+                Midfielder 3
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo9.jpg" alt="Photo 9">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[8][0] }}
+                {% else %}
+                Midfielder 4
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo10.jpg" alt="Photo 10">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[9][0] }}
+                {% else %}
+                Midfielder 5
+                {% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="photo-container">
+        <img src="photo11.jpg" alt="Photo 11">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[10][0] }}
+                {% else %}
+                Forward 1
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo12.jpg" alt="Photo 12">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[11][0] }}
+                {% else %}
+                Forward 2
+                {% endif %}</p>
+        </div>
+    </div>
+    <div class="photo-container">
+        <img src="photo13.jpg" alt="Photo 13">
+        <div class="description">
+            <p>{% if top_players %}
+                {{ top_players[12][0] }}
+                {% else %}
+                Forward 3
+                {% endif %}</p>
+        </div>
+    </div>
 </div>
 <script>
     document.getElementById('make-predictions-btn').addEventListener('click', function() {

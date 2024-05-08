@@ -1,4 +1,8 @@
 import requests
+import os
+
+key1 = os.getenv('SPORTRADAR_API_KEY')
+key2 = os.getenv('SPORTRADAR_IMAGE_API_KEY')
 
 # Function to get the manifest for the player images
 def get_manifest_json():
@@ -10,7 +14,7 @@ def get_manifest_json():
     image_type = "headshots"
     year = "2024"
     format = "json"
-    your_api_key = "muy5mttxmvb4zx6q995w4zcf"
+    your_api_key = key1
     manifest_search_url = f"https://api.sportradar.us/{sport}-images-{access_level}{version}/{provider}/{league}/{image_type}/players/{year}/manifest.{format}?api_key={your_api_key}"
 
     try:
@@ -39,5 +43,5 @@ def get_image_urls(top_players):
     image_type = "headshots"
     year = "2024"
     format = "json"
-    your_api_key = "3wtfjw2jfy2wwuwbudr6b9ru"
+    your_api_key = key2
     imagesearchurl = "https://api.sportradar.us/{sport}-images-{access_level}{version}/{provider}/{league}/{image_type}/players/{asset_id}/{file_name}.{format}?api_key={your_api_key}"

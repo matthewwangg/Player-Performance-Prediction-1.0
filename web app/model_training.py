@@ -60,7 +60,10 @@ def evaluate_model(model, X_test, y_test, position):
     mse = mean_squared_error(y_test, y_pred)
     print(f"Mean Squared Error for {position}: {mse}")
 
+# Function to generate the visualizations
 def visualize(models, output_dir, positions):
+
+    # Ensuring there is a directory for the visualizations
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -142,6 +145,7 @@ class DenseNet(nn.Module):
 
 # Function that trains the neural network
 def train_nn_model(training_data, input_size, n_epochs=10):
+
     model = DenseNet(input_size)
     loss_function = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -159,6 +163,7 @@ def train_nn_model(training_data, input_size, n_epochs=10):
 
 # Function that loads the data correctly for the NN
 def load_nn_data(df, target_column='total_points', test_size=0.2, batch_size=32):
+
     X = df.drop(target_column, axis=1).values
     y = df[target_column].values
 
@@ -177,17 +182,20 @@ def load_nn_data(df, target_column='total_points', test_size=0.2, batch_size=32)
 
 # Function that loads the data for each position
 def load_data_for_position(df, position, target_column='total_points', test_size=0.2, batch_size=32):
+
     position_df = df[df['position'] == position]
     return load_nn_data(position_df, target_column, test_size, batch_size)
 
 # Function that calls train model for each position
 def train_model_for_position(training_data, input_size, position, n_epochs=10):
+
     print(f"Training model for position: {position}")
     model = train_nn_model(training_data, input_size, n_epochs)
     return model
 
 # Function that trains each model based on position
 def train_and_save_models_by_position(df, positions=['GKP', 'MID', 'FWD', 'DEF']):
+
     models = []
     for position in positions:
         training_data, _ = load_data_for_position(df, position)

@@ -6,7 +6,6 @@ from data_pipeline import initialize_map
 app = Flask(__name__, static_url_path="/static")
 
 # Initialize the database with the Flask app
-# Commented for now
 #database.init_app(app)
 
 @app.route('/')

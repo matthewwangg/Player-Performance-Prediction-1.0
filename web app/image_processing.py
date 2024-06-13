@@ -6,6 +6,8 @@ key2 = os.getenv('SPORTRADAR_IMAGE_API_KEY')
 
 # Function to get the manifest for the player images
 def get_manifest_json():
+
+    # Parameters for the search
     sport = "soccer"
     access_level = "t"
     version = "3"
@@ -32,8 +34,10 @@ def get_manifest_json():
         print(f"Error fetching image URLs: {e}")
         return []
 
-# Function to get the image urls given the player names
+# Unfinished function to get the image urls given the player names
+
 def get_image_urls(top_players):
+    
     image_urls = []
     sport = "soccer"
     access_level = ""
@@ -45,3 +49,13 @@ def get_image_urls(top_players):
     format = "json"
     your_api_key = key2
     imagesearchurl = "https://api.sportradar.us/{sport}-images-{access_level}{version}/{provider}/{league}/{image_type}/players/{asset_id}/{file_name}.{format}?api_key={your_api_key}"
+
+    for i in range(len(top_players)):
+
+        # Utilize the player name to generate the necessary information
+
+        # Update the image search url based on that information
+
+        image_urls.append(imagesearchurl.format(asset_id=""))
+
+    return image_urls

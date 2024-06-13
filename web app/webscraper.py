@@ -7,6 +7,9 @@ from IPython.display import display, Image
 from PIL import Image as PILImage
 from io import BytesIO
 
+# Disclaimer: If utilizing this code, please do so responsibly and appropriately
+
+# Function to webscrape the player images from Wikipedia
 def scrape_images(player_name):
 
     # Construct Wikipedia URL
@@ -56,7 +59,9 @@ def scrape_images(player_name):
 wiki_lang = "en"
 wiki = wikipediaapi.Wikipedia(wiki_lang)
 
+# Function to parse a Wikipedia page
 def page_parser(response):
+
     # Parse the HTML content
     soup = BeautifulSoup(response.text, 'html.parser')
         
@@ -98,6 +103,7 @@ def page_parser(response):
         'image_tags': image_tags,
     }
 
+# Function to collect images
 def image_collector(article_data):
     counter = 0
     # Download and display the images
@@ -114,7 +120,8 @@ def image_collector(article_data):
                 counter += 1
         except Exception as e:
             pass
-        
+
+# Function to format tables
 def table_format(table):
     
     if table:
@@ -151,6 +158,7 @@ def table_format(table):
     else:
         print("No table found")
 
+# Function to webscrape Wikipedia
 def wikipedia_scraper(url):
     if wiki.page(url).exists():
         return page_parser(wiki.page(url))
@@ -165,6 +173,7 @@ def wikipedia_scraper(url):
         print(f"Error: Request to {url} returned status code {response.status_code}")
         return None
 
+# Function to gather a Wikipedia URL and webscrape the page
 def prompt():
     # Example usage:
     print("Enter a valid Wikipedia URL\n")

@@ -3,10 +3,10 @@ import pandas as pd
 from model_training import train_models, evaluate_model, visualize
 from optimizations import linear_optimization, linear_optimization_specific
 
-
-# @app.route('/predicts', methods=['GET','POST'])
+# Function to start the training, visualization, and prediction process
 def predicts():
-    # Reading in the CSV file from Kaggle (Credits to Paola Mazza) into a Pandas Data Frame
+
+    # Reading in the CSV file into a Pandas Data Frame
     players_df = pd.read_csv(find_path())
 
     positions = ["DEF", "MID", "FWD", "GKP"]
@@ -18,6 +18,7 @@ def predicts():
     # Make predictions using your function from the module
     models = train_models(dataframes, positions)
 
+    # Evaluate each of the 4 models
     for i in range(len(models)):
         evaluate_model(models[i], dataframes[i].select_dtypes(include=['int']).drop(columns=['total_points']),
                        dataframes[i]['total_points'], positions[i])
@@ -36,15 +37,14 @@ def predicts():
     # Convert optimized players to list of dicts for easier template rendering
     optimized_players_list = optimized_players.to_dict(orient='records')
 
-    print(optimized_players_list)
-
     return top_players, optimized_players_list
 
+# Function to start the training, visualization, and prediction process
 def predicts_custom(data):
 
     # Parse the data here to gather counts for each type, players to exclude/include from the team, and custom budget
 
-    # Reading in the CSV file from Kaggle (Credits to Paola Mazza) into a Pandas Data Frame
+    # Reading in the CSV file into a Pandas Data Frame
     players_df = pd.read_csv(find_path())
 
     positions = ["DEF", "MID", "FWD", "GKP"]
@@ -56,6 +56,7 @@ def predicts_custom(data):
     # Make predictions using your function from the module
     models = train_models(dataframes, positions)
 
+    # Evaluate each of the 4 models
     for i in range(len(models)):
         evaluate_model(models[i], dataframes[i].select_dtypes(include=['int']).drop(columns=['total_points']),
                        dataframes[i]['total_points'], positions[i])
@@ -74,13 +75,12 @@ def predicts_custom(data):
     # Convert optimized players to list of dicts for easier template rendering
     optimized_players_list = optimized_players.to_dict(orient='records')
 
-    print(optimized_players_list)
-
     return top_players, optimized_players_list
 
 
-
+# Function to find the file path
 def find_path():
+
     # Get the current directory of the Flask application
     current_dir = os.path.dirname(__file__)
 
@@ -89,11 +89,13 @@ def find_path():
 
     # Define the path to the CSV file
     csv_file_path = os.path.join(parent_dir, 'datasets', 'players.csv')
+
     return csv_file_path
 
 
-# Preprocess the data within the Pandas Data Frame
+# Function to preprocess the data within the Pandas Data Frame
 def preprocess(players_df, positions):
+
     split_dataframes = []
 
     # Split the dataset based on values in the 'Position' column
@@ -107,8 +109,9 @@ def preprocess(players_df, positions):
 
     return split_dataframes
 
-# Get the top players
+# Function to get the top players
 def get_top_players(model, dataframe, position, n):
+
     # Get the predictions
     X = dataframe.select_dtypes(include=['int']).drop(columns=['total_points'])
     predictions = model.predict(X)
@@ -129,6 +132,7 @@ def get_top_players(model, dataframe, position, n):
 
 # Function to get predicted points for players in each position
 def get_predicted_points_for_position(model, dataframe):
+
     # Assuming 'dataframe' is the input dataframe containing player information
     X = dataframe.select_dtypes(include=['int']).drop(columns=['total_points'])
     predictions = model.predict(X)
@@ -144,11 +148,13 @@ def get_predicted_points_for_position(model, dataframe):
 
 # Function to create a DataFrame with predicted points and costs for all players
 def create_predicted_points_and_costs_dataframe(models, positions, players_df):
+
     # Create an empty list to store DataFrames for each position
     dfs = []
 
     # Iterate through each position and corresponding model
     for i in range(len(models)):
+
         # Filter players_df for current position
         position_df = players_df[players_df['position'] == positions[i]]
 

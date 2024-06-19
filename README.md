@@ -1,5 +1,8 @@
-# Player-Performance-Prediction
+# Player-Performance-Prediction 1.0
 Working with player performance data to create a machine learning model intended to predict player performance in the English Premier League.
+
+NOTE: I originally planned to start developing a 2.0 version on the rework branch, but I decided to move it to a separate branch and so the 2.0 repository will become public when it's up and running.
+
 # Dataset 1
 Fantasy Premier League 2023-2024 Dataset credits to Paolo Mazza (CC0: Public Domain)
 https://www.kaggle.com/datasets/meraxes10/fantasy-premier-league-dataset-2023-2024
